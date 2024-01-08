@@ -14,7 +14,7 @@ class Model:
         num_beams = beams
         self.gen_kwargs = {"max_length": max_length, "num_beams": num_beams}
     
-    def predict_step(self,image_paths):
+    def predict_step(self,image_paths   ):
         images = []
         for image_path in image_paths:
             i_image = Image.open(image_path)

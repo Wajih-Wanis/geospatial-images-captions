@@ -1,9 +1,13 @@
 from flask import Flask, render_template, request, redirect, url_for
 import os
 from model import Model
-app = Flask(__name__)
+from config import Config
 
-UPLOAD_FOLDER = 'uploads'
+
+app = Flask(__name__)
+app.config.from_object(Config)
+
+UPLOAD_FOLDER = app.config['UPLOAD_FOLDER']
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 LLM = Model(16,4)
 
@@ -22,7 +26,7 @@ def index():
 @app.route('/upload', methods=['POST'])
 def upload_file():
     if 'file' not in request.files:
-        return redirect(request.url)
+        return redirect(request.url)    
 
     file = request.files['file']
 
@@ -33,7 +37,7 @@ def upload_file():
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
         file.save(file_path)
         
-        # Replace the following line with your caption generation logic
+        
         caption = LLM.predict_step([file_path])
 
         return render_template('index.html', filename=file_path, caption=caption)
